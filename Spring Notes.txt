@@ -1,0 +1,211 @@
+What is Spring
+-------------------------
+1. Spring is a dependency injection framework
+
+What is dependency injection
+---------------------------------
+    1.1 What is dependency?
+        
+        Architecture of General web App...
+
+        WEB -> Business -> Data
+
+        class BusinessService {
+            SortAlgorithm sortAlgorithm;
+        }
+------------------------------------------------------
+
+    How to attach sort mehtod to Business service
+    --------------------------------------------
+
+    Approach-1: Tight Coupling
+    -------------------------------
+    class BusinessService {
+        SortAlgorithm sortAlgorithm = new BubbleSortAlgorithm();
+    }
+
+    class BubbleSortAlgorithm implements SortAlgorithm {}
+
+
+    Approach-2: Loose Coupling
+    -----------------------------------
+    class BusinessService {
+        public BusinessService (SortAlgorithm sortAlgorithm) {
+            this.sortAlgorithm = sortAlgorithm;
+        }
+    }
+
+    SortAlgorithm sortAlgorithm = new BubbleSortAlgorithm();
+    BusinessService service = new BusinessService(sortAlgorithm);
+
+    ```Note: 
+        1. SortAlgorithm is the dependency for the BusinessService
+        2. Who creates the SortAlgorithm object and provide to the BusinessService
+            - In case of spring framework, spring is doing this task automatically.
+            - This is called dependency injection.```
+
+
+    Q) How does the spring framework know, which object he needs to create and which dependency need to inject while crating the object.
+    A) We need to help spring framework to identify tow things...
+        1. Objects spring needs to manage
+        2. Dependency for that objects
+    
+
+    There are two annotation to do this...
+        1. @Component - Tells spring framework that this class object needs to manage by spring.
+        2. @Autowired - Instruct spring framework about the dependency for a class.
+
+    @Component
+    class BusinessService {
+        SortAlgorithm sortAlgorithm = new BubbleSortAlgorithm();
+    }
+    @Component
+    class BubbleSortAlgorithm implements SortAlgorithm {}
+    
+
+Terminology
+-------------------
+    1. Beans/ Spring Beans - Beans are different objects that are managed by the spring framework.
+    2. Autowiring - A process in which spring identify the dependency and populates them.
+    3. Dependency injection - Inject dependency object into another object.
+    4. Inversion of Control - Taking control to manage dependency objects is called inversion of control.
+    5. IOC Container - IOC container is a generic term used for anything imlement inversion of control.
+    6. Application Context - is the one IOC container. Application Context is the one where all the 
+    Beans are created and managed.
+-------------------------------------------------------------
+
+```Examples```
+
+1. Create a simple spring Project and Run it
+2. Create an Application and use binary search to demonstrate the tight Coupling.
+3. Update the program#2 with Spring and demonstrate the loose Coupling, dependency injection and bean creation.
+
+ ```Keypoints for spring objects```
+ ------------------------------------
+ 1. What are the beans?
+ 2. What are the dependency?
+ 3. Where to search beans?
+
+ What are happening in background?
+ ---------------------------------
+
+    turn on the spring level logging
+    ----------------------------------
+    1. Go to the applicaiton.properties file
+    2. logging.level.org.springframework = debug
+
+    Summary:
+    -------------
+        - Intially the Companent scan is done in the current package of main class or the package specified in @ComponentScan() annotation.
+        - Create the instance of the Component classes
+        - Autowiring is done via constructor(Constructor injection)
+
+```Example```
+----------------
+1. Create component to both sort algorithm and run the application. Fix the concerns.
+
+``Note``
+---------------
+Autowiring types
+---------------------
+    1. Constructor based Autowiring (Constructor injection) #used for mandatory dependency
+    2. Setter based Autowiring (Setter injection) #used for optional dependency
+    3. No Setter and Constructor
+
+```Spring framework module Architecture diagram```
+
+``Note``
+-------------
+    All the spring modules are the part of spring framework.
+
+```Spring projects```
+---------------------------
+Spring projects provides solution faced by Enterprise. Some Spring projects are below...
+
+1. Spring Boot
+2. Spring Cloud
+3. Spring Data
+4. Spring Integration
+5. Spring Batch
+6. Spring Security
+7. Spring HATEOAS
+8. Others
+    Spring Session
+    Spring Web Servies
+
+Why spring is so popular?
+-----------------------
+1. Enable Testable Code
+2. No plumbing Code
+    Exception Handling and other code to close other resources
+3. Flexible Architecture
+4. Staying Current
+
+
+
+Intorduction to Maven
+---------------------------
+1. Create a Spring project with ``WEB`` dependency.
+2. Explain the pom.xml (POM => Project object model)
+    2.1 Explain the meaning of following
+        - GroupId
+        - ArtifactId
+        - packaging
+            - Jar (Java Archieve)
+            - War (Web Archieve)
+
+    2.2 Property
+            - java.version
+    2.2 dependencies
+            - dependency
+                - groupId
+                - artifactId
+
+Maven Build Life Cycle
+----------------------------
+    1. Validate
+    2. Compile
+        Compile the source code
+        Compile the test code
+    3. Test
+        -Run the unit test code
+    4. package
+        - Create the jar file
+    5. Integration test
+    6. Verify
+    7. Intall
+    8. Deploy
+
+------------------------------ 
+    Run the maven life cycle
+    -------------------------
+    1. Open the cmd.
+    2. goto the maven project directory
+    3. Run the command `mvn clean install`
+
+---Explain convention over configuration.
+
+Maven Repository
+----------------------
+- Local Repository
+- Remote Maven Repository => Central Repository
+    - Store all the versions of all dependencies 
+
+Example: Create a Maven project and crate an entry for any dependency and show how it works
+
+Common maven commands
+--------------------------
+-mvnw compile
+-mvnw clean compile
+-mvnw clean test-compile
+-mvnw test
+-mvnw package
+-mvnw install
+-mvnw help:effective-settings
+-mvnw help:effective-pom
+-mvnw dependency:tree
+-mvnw dependency:sources
+-mvnw --debug install
+
+Spring In Depth
+-----------------------
