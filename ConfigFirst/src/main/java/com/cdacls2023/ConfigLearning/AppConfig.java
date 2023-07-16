@@ -18,8 +18,8 @@ public class AppConfig {
 	}
 	
 	@Bean
-	public Person person() {
-		return new Person("Rahul", 25);
+	public Person me() {
+		return new Person(name(),age());
 	}
 	
 	@Bean
