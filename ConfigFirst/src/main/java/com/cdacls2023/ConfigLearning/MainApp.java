@@ -17,5 +17,9 @@ public class MainApp {
 		System.out.println(context.getBean("person"));
 		
 		System.out.println(context.getBean("address"));
+		
+		System.out.println(context.getBean("officeAddress"));
+		
+//		System.out.println(context.getBean(Address.class));
 	}
 }

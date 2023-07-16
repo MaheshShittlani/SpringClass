@@ -26,4 +26,9 @@ public class AppConfig {
 	public Address address() {
 		return new Address("V.T. Road, Mansarovar", "Jaipur");
 	}
+	
+	@Bean(name = "officeAddress")
+	public Address address2() {
+		return new Address("Janpath - Sodala", "Jaipur");
+	}
 }
