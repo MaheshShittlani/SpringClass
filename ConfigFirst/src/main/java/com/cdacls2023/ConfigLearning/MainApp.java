@@ -14,11 +14,12 @@ public class MainApp {
 		System.out.println(context.getBean("name"));
 		System.out.println(context.getBean("age"));
 		
-		System.out.println(context.getBean("person"));
+		System.out.println(context.getBean("me"));
 		
-		System.out.println(context.getBean("address"));
+		System.out.println(context.getBean("myBrother"));
+//		System.out.println(context.getBean("address"));
 		
-		System.out.println(context.getBean("officeAddress"));
+//		System.out.println(context.getBean("officeAddress"));
 		
 //		System.out.println(context.getBean(Address.class));
 	}
