@@ -142,6 +142,319 @@ Why spring is so popular?
 4. Staying Current
 
 
+Java Based Spring Configuration
+---------------------------------
+Example-1: Create an applicaiton class which launch the applicaiton context and configure a simple bean 
+and use it.
+
+```Launch a Spring Context:```
+---------------------------------------
+var context =  new AnnotationConfigApplicationContext(AppConfig.class)
+
+
+Example-2: Explain Creating spring bean with java objects
+
+
+```Configure the things that we want Spring to manage - @Configuration```
+--------------------------------------------------------------------------
+    @Configuration
+    class AppConfig {
+        @Bean
+
+        public String name() {
+            return "Mahesh";
+        }
+    }
+
+    //Retrieving beans managed by spring
+    sysout(context.getBean("name"))
+
+    
+What is Spring Container?
+    - Manage Beans and thier lifecycles.
+    - Similar words: IOC Container, Application Context
+
+Types of IOC Container
+---------------------
+    1. Bean Factory - Basic Spring Container
+    2. Application context - Advance Spring Container with enterpriese specific feature
+        - Easy to use in web Applicaiton.
+        - Easy internationlization
+        - Easy integration with Spring AOP.
+    Which one to use?
+        Application Context - Recommanded for web applions, web services and other
+
+
+Example-3: Explain Using one bean into another bean and the use of the bean naming.
+Raise hands to the problem when bean is used with their type.
+
+POJO (Plain Java Objects)
+--------
+
+Java Bean
+-------------------
+    class Person implements Serializable { // 3. implements Serializable 
+        private int id;
+        private String name;
+
+        public Person() {} // 1. No argument construction
+
+        public String toString() {
+            return id + " "+ name;
+        }
+
+        //2. Getters and Setters
+    }
+
+Spring Beans
+----------------
+ - Anything(the objects/classes) that is managed by spring container is called spring beans.
+
+
+ ```Q) How to list all spring Beans???```
+    A) context.getBeanDefinationNames(): String[];
+
+Example-4: Expalin the possible soultion of the Example#3.
+
+@Primary - A bean should be given preference when multiple candidate are qualified.
+    - Preferred
+@Qualifier - A specific bean should be auto wired(name of the bean should be use as Qualifier)
+    - @Autowired + @Qualifier
+
+``Important``
+-----------------
+    @Qualifier has higher priority then @Primary
+
+
+Types of dependency injections
+------------------------------
+
+1. Constructor injection - Dependencies are set by creating the Bean using the constructor
+2. Setter injection - Dependencies are set by calling the setter methods of your beans
+3. Field based injection - No Setter or constructor. Dependency is injected using reflection.
+
+Note: 
+  1. Constructor injections are Recommanded.
+  2. Mandatory dependency - constructor injection
+  3. Optional dependency - setter injection
+
+Important Terminology
+-----------------------
+1. @Component(...): An instance of class will be managed by spring framework
+2. Dependency
+3. @ComponentScan: How does spring framework find the component class. By default it search into the current package. if you want to specify the other package for component scan, you can specify the package name along with the component scan. if the package name is given in the component scan then the package and subpackage are scanned for components.
+4. Dependency injection - Identify beans and their dependency and wire them together. (Provide IOC - Inverstion of control)
+    4.1 Spring Beans`
+    4.2 IOC Container
+        4.2.1 - ApplicationContext (Mostly used)
+        4.2.2 - BeanFactory
+5. Autowiring - Process of wiring the dependeny automatically by Spring.
+--------------------------------------------------------------------------------------
+
+@Component V/S @Bean
+-------------------------
+Heading       @Component                          @Bean
+----------------------------------------------------------------------------
+Where?         Can be used on any Java class       Methods in spring configuration class 
+
+Easy to use     Very Easy. Just add annotation     Need to write the code
+
+Autowiring      Yes - Field, Constructor, Setter    Yes - Method call, Parameters
+
+Who Creats beans?  Spring                          You write bean creation code.
+
+Recommande For  Intitating beans for application    1. Custom business logic
+                                                    2. Initiating beans for 3rd party liabrary
+
+
+Why we do have a lot of dependencies?
+---------------------------------------------
+1. WEB 
+2. Business
+3. Data
+
+1. Each layer is dependent on the laye below it.
+
+
+With Spring Frameworks
+------------------------
+    - Instead of focusing on object, focus on their dependencies and wriring
+        - You can focus on your business logic
+    - Spring framework manages the lifecycle of objects
+        - Mark component using annontation (@Component and other...)
+        - Mark dependency using @Autowired
+
+
+Eager Intialization of Spring Beans
+---------------------------------------------
+-Default initialization for Spring beans: `Eager initialization`
+
+-#Example to demonstrate defalut intialization and change with lazy initialization.
+
+- Eager initialization is recommended...
+    - Errors in the configuration are discovered immediately at application startup.
+- However you can configure beans to be lazily initialized using @Lazy annotation.
+    - Not Recommanded and Not frequently used.
+- @Lazy annotaion
+    - Can be used almost everywhere @Component and @Beans are used.
+    - Lazy resolution proxy will be injected instead of actual dependency.
+    - Can be used on Configuration(@Configuration) class:
+        - All @Bean methods within the @Configuration will be lazily initialized.
+
+Heading             Lazy initialization                     Eager initialization
+---------------------------------------------------------------------------------------
+initialization time Use of the bean                         Application Startup
+
+Default             No                                      Yes
+
+Code snippet        @Lazy or @Lazy(value = true)            @Lazy absent
+
+Errors?             Runtime Exception                       On Stratup - Exception
+
+Usage               Rarely                                  Frequently
+
+Memory Consumption     Less(Untill bean is initialized)     High
+
+Recommeded scenario    Bean is rarely used                  Most of the beans
+
+
+
+Spring Bean Scope
+-------------------
+- Spring beans are defined to be used in a specific scope.
+    - Singleton: One object instance per spring IOC container
+    - Prototype: Possibly many object instance per Spring IOC container
+
+    - Scope application only for web Spring ApplicationContext
+        - Request - One object instance per single HTTP request object
+        - Session - One object instance per user HTTP session
+        - Application - One object instance per web application runtime
+        - WebSocket - One object instance per WebSocket instance
+
+Prototype V/S Singleton Scope
+------------------------------------------
+Heading         Prototype                          Singleton
+-----------------------------------------------------------------------------------
+instance        Many per IOC container              Single per IOC container
+
+beans           Each bean - New Instance            Same instance for every bean
+
+default         No                                  Yes
+
+Code           @Scope(value                           @Scope(value=
+                = ConfigurableBeanFactory.              ConfigurableBeanFactory.
+                SCOPE_PROTOTYPE)                        SCOPE_SINGLETON         
+                                                    
+Usage           Rarely                                  Frequently
+
+Recommanded     Steteful beans                          Stateless Beans
+scenario
+
+-----------------------------------------------------------------
+@PostConstruct and @PreDestroy annotation
+
+### `Example` - Explain @PostConstruct and @PreDestroy
+
+#####################################################################
+##########Spring Streotype annontation @Component and more...########
+#####################################################################
+
+@Component - Generic annotation applicable for any class.
+    - Base for all spring stereotype annontation
+    - Spacilization of @Component
+        1. @Service - Indicates that an annotated class has business logic.
+        2. @Controller - Indicates that an annotated class is a controller.(E.g. A web controller)
+            -Used to define controllers in your web application and REST API.
+        3. @Repository - Indicates that an annotated class is used to retrieve and/or manipulate data in a database.
+
+What should you use?
+-----------------------------
+    - (Recommeded)*** - Use the most specific annontation possible.
+
+Why should use specific?
+------------------------
+    - By using specific annontation, you are giving the more information to the framework about your intentions.
+    - you can use AOP at a later point to add additional behavior.
+        - Example: For @Repository, Spring automatically wires in JDBC Exception translation feature.
+
+Important spring annotation Review
+------------------------------------------
+
+```@Configuration``` - Indicates that a class declares one or more @Bean methods and may be processed by Spring container to generate bean definitions.
+
+```@ComponentScan``` - Defines specific package to scan for components. If specific package are not defined. scanning will occure from the package of the class that declare this annotation means current package.
+
+```@Bean``` - Indicates that a method produces a bean to be managed by the spring container.
+
+```@Component``` - Indictes that an annoted class is a component.
+
+@Service - Specialization of @Component indicating that an annotated class has business logic.
+
+@Controller - Specialization of @Component indicating that an annotated class is a Controller
+
+@Repository - Specialization of @Component indicating that an annotated class is perform database operations.
+
+@Primary - Indicates that a bean should be given preference when multiple candidates are qualified to autowire a single valued dependency.
+
+@Qualifier - Used on a field or Parameters as a qualifier for candidate beans when autowiring.
+
+@Lazy - Indicates that a bean to be lazily initialized.
+
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE): Defines a bean to be a prototype. This is used to defines the Scope of the bean.
+
+@PostConstruct - Identies the tat will be executed after the dependency injected. Generally perform any initialization.
+
+@PreDestroy - Identies the method that will receive a callback notification to signal that the instance is in the process of being removed by the container. Typically used to release resources that has been holding. Generally used for cleanup.
+
+@Named (Jakarta Context & Dependency injection (CDI) similar to @Component)
+
+@Inject(Jakarta Context & Dependency injection (CDI) similar to @Autowired)
+
+Quick Review of important Spring Concepts
+--------------------------------------------
+
+1. Dependency Injection (Inversion of Control)
+    - Constructor Injection
+    - Setter Injection
+    - Field Injection
+2. IOC Container - Spirng IOC Context manage spring beans and lifecycle
+    - Bean Factory - Basic IOC Container
+    - ApplicaitonContext - Advance IOC Container
+
+3. Spring Beans
+4. Auto Wiring
+
+----------------------------------------------------------
+
+Spring Big Picture
+------------------------
+    Spring Framework -> Have many spring modules
+    1. Spring Core - Fundamental Features
+        IOC Container, Dependency Injection, Auto Wiring
+    2. WEB - Spring MVC(Web application and REST API)
+    3. Web Reative: Spring WebFlux etc
+    4. Data Access: JDBC, JPA etc.
+    5. Integration: JMS etc.
+    6. Testing, Mock Objects, Spring MVC Test etc.
+
+Q) Why spring is divided into modules?
+
+
+Spring Projects
+-----------------
+    1. Spring Framework
+    2. Spring Security
+    3. Spring Data: Manage different type of databases. SQL and NoSQL
+    4. Spring Integration: Intigrate with others application
+    5. Spring Boot - Build microservices
+    6. Spring Cloud - Build cloud native application.
+
+
+Hierachy
+-------------
+    Spring Projects  > Spring Framework > Spring Modules
+
+    
 
 Intorduction to Maven
 ---------------------------
