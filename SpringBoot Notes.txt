@@ -1,0 +1,307 @@
+Before Spring Boot
+------------------------
+    Setting up the spirng project before Spring Boot
+    ------------------------------------------------
+    1. Depency management (pom.xml)
+    2. Define web app Configuration (web.xml)
+    3. Manage Spring beans (Context.xml) - XML based Configuration.
+    4. Implement Non functional requirements (NRFs) - Like error handling, logging etc.
+
+Understand the spring boot
+-------------------------------
+1. Create a simple spring boot project
+2. Create a simple rest API - Example(/courses)
+
+Goal of Spring Boot
+---------------------------
+Help you build ```PRODUCTION-READY``` app ```Quickly```
+    - Build Quickly
+        - Spring Initializr
+        - Spring Boot starter projects
+        - Spring boot auto Configuration
+        - Spring boot dev tool
+    - Be Production-READY
+        - logging
+        - Different Configuration for different environments
+            - Profiles, ConfigurationProperties
+            - Monitoring(Spring Boot Actuator)
+
+
+Exploring Spring Boot Starter projects
+------------------------------------------------
+I need a lot of frameworks to build application features:
+    - Build a REST API - Spring MVC, tomcat, Json conversion etc...
+    - Write Unit Test: Spring Test, JUnit, Mockito,....
+How can I group them and make it easy to build applications?
+    - Starters: Convient dependency descriptors for diff. features.
+```Spring Boot``` provides variety of starter projects.
+        - Web Application & REST API - Spring boot starter web (Spring-webmvc, spring-web, spring-boot-starter-tomcat,spring-boot-starter-json)
+        - Unit Tests - Spring Boot starter test
+        - Talk to database using JPA - Spring boot starter data JPA
+        - Talk to database using JDBC - Sprint boot starter JDBC
+        - Secure web application or REST API - Spring boot Starter Security
+
+Exploring Spring boot auto Configuration
+-------------------------------------------------
+-I need lot of Configuration to build spring app:
+    - Component scan, DispatcherServlet, Data Source, JSON Conversion, ...
+- How it can be simplified?
+    - Auto Configuration: Automated Configuration for your app
+        - Decided based on:
+            - Which frameworks are in the classpath?
+            - What is the existing Configuration(Annotations etc)?
+
+Example: Spring Boot Starter Web
+----------------------------------------
+    - DispatcherServlet(DispatcherServletAutoConfiguration)
+    - Embedded Servlet Container - Tomcat is default (EmbeddedWebServerFactoryCustomizerAutoConfiguration)
+    - Default Error Pages(ErrorMvcAutoConfiguration)
+    - Bean <-> JSON (JacksonHttpMessageConvertersConfiguration)
+
+Build Faster with Spring Boot DevTools
+---------------------------------------------
+1. Increase developers productivity
+2. Why do you need to restart the server manually for every change.
+    - Trying including dev tool in project and see that server is auto restarted on change.
+
+    ``Note:`` If you change in pom.xml, you need to restart the server manually.
+
+----------------------------------------------------------------------------------
+Spring Boot - Production READY
+-----------------------------
+    Managing App. Configuration using Profiles
+
+        - Application have different environments: Dev, QA, Stage, Prod....
+        - Diferent environments need different configurations...
+            - Different databases
+            - Different WEb services
+        - How can you provide different configuration for different environments?
+            - Profiles: Environments specific configuration
+
+        - How can you define exernalized configuration for your appliation?
+
+    Dev
+    --------------
+    debug
+    QA
+    ------------------
+    trace
+
+    Prod
+    -----------
+    info
+
+    Example Profiles
+    ------------------
+        Dev
+            - logging.level.org.springframework = debug
+            - applicaiton-dev.properties
+        QA
+            - logging.level.org.springframework = trace
+            - application-qa.properties
+        Stage
+            - logging.level.org.springframework = info
+            - applicaiton-stage.properties
+        Prod
+            logging.level.org.springframework = info
+            - application-prod.properties
+
+Set the active profile
+-----------------------
+    - Go to the application.properties(default Property)
+    - spring.profiles.active=prod
+
+
+logging levels
+------------------
+trace
+debug
+info
+warning
+error
+
+off
+
+Complex profile management
+--------------------------------
+payment-service.url=
+payment-service.username=
+payment-service.password=
+
+
+```Example```
+
+@ConfigurationProperties(prefix = "payment-service")
+@Component
+class PaymentServiceConfiguration {
+    private String url;
+    private String username;
+    private String password;
+
+    // setters and getter
+}
+
+
+Simplify deployment with Spring Boot Embedded Servers
+---------------------------------------------------------------
+How to deploy your application?
+    - Install java
+    - Insall web server 
+        Apache tomcat/ weblogic/ Websphere
+    - Deploy the applicaiton WAR(Web Archive)
+        - This is the old WAR approach
+        - Complex to setup
+
+Embedded Server - Simpler Alternative
+---------------------------------------
+    - Install java
+    - Run JAR file
+
+    - Example:
+        - Look at the installation process by 
+            mvn clean install
+        - see maven is creating jar at target folder.
+        - Go to the jar location
+        - Run jar by using
+            java -jar <jar file>
+    - Make JAR not WAR (credit: JOSH long!)
+    - Embedded Servers examples:
+        - Spring-boot-starter-tomcat
+        - Spring-boot-starter-jetty
+        - Spring-boot-starter-undertow
+
+-------------------------------------------------------------------------
+
+Monitor Applicaiton using Spring Boot Actuator
+-----------------------------------------------------
+
+- Monitor and manage your application in production.
+
+- provides a number of endpoints:
+    - beans - Complete list of Spring beans in your app
+    - health - Application health information
+    - metrics - Application metrics
+    - mappings = Default around request mappings.
+
+- Try visiting /actuator path
+
+***Note: If you want more features from actuator you need to enable them.
+
+application.properties
+----------------
+    management.endpoints.web.exposure.include=*
+    management.endpoints.web.exposure.include=health,metrics
+
+#############################################################
+#############Spring Boot V/S Spring MVC V/S Spring###########
+#############################################################
+
+
+############################################################
+###############Learning JPA and Hibernate - Approach #######
+############################################################
+
+Data Access Layer Hierarchical Development
+---------------------------------------------------
+JDBC -> Spring JDBC -> JPA -> Spring Data JPA
+-------------------------------------------------
+
+1. Create a Spring Boot Project with H2
+2. Crate ```Course``` table
+3. Use spring JDBC to play with course table.
+4. Use JPA and Hibernate to play with course table.
+5. Use Spring Data JPA to play with course table.
+
+---------------------------------------------
+
+Example-1: Create and example to demonstrate the connection between spring and mysql
+    - Add the dependency MYSQL JDBC Driver
+    - Ensure the Spring-boot-starter-data-jdbc in in your dependency
+    - Write the following db configuration in appliation.properties
+        spring.datasource.url=jdbc:mysql://localhost:3306/test
+        spring.datasource.username=root
+        spring.datasource.password=
+        spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+Example-2: Create a course table and insert data using spring jdbc with sql query.
+    - Create a class CourseRepository in a package course.jdbc
+    - Create dependency jdbcTemplate in CourseRepository & Autowire it.
+    - Create insert query and execute using
+        jdbcTemplate.update() method
+    - To Run the code create a CourseRunner class which implments CommandLineRunner
+    - Inject the dependency of CourseRepository into this class.
+    - call the insert method from the run() method.
+
+Example-3: Update Example#2 with prepared statements.
+    - Update the above query with parameterized query and pass the course object to insert method to supply the parameters.
+    - Create a Course class with constructor and setter/getters
+    - Execute query by using jdbcTemplate.update(query, params)
+    - Create a query for delete and try deleting rows by id.
+    - Create a query to fetch data by id and show the result by calling into CourseRunner class.
+    Map ResultSet to object
+    -----------------------------
+    jdbcTemplate.queryForObject(SELECT_QUERY, new BeanPropertyRowMapper<>(Course.class) , id);
+
+
+########################
+####     JPA        ####
+########################
+ - JPA helps to directly MAP a class fields with a table.
+
+Example-4: Create the above example by using JPA.
+    - Convert the course class into entity by using @Entity annotation
+    - Use the @Id annotation to mark the primary key.
+    - Use the @Column annotation to map the Columns.
+    - Create a CourseJPARepository class and inject the dependency of EntityManager.
+    - call the method from the entitymanager object to insert, delete and select the data.
+
+JDBC
+--------------------
+    1. Write a lot of JDBC query
+    2. write a lot of java code
+
+Spring jdbc
+---------------
+    1. Write a lot of JDBC query
+    2. Lesser java code
+
+JPA
+---------------
+    1. No need to write sql query
+    2. Just map entities to tables.
+
+Spring data JPA
+-------------------
+    1. Make JPA more simple
+    2. No Need to manage EntityManager. Spring boot take care of this.
+
+
+Example-5: Revise the Example-4 with Spring data JPA.
+    - create an interface called SpringDataJPARepository which extends JPARepository<Class, PrimaryKeyType>
+    - Directly execute the methods of JPARepository to perform the ddl and dml operations.
+
+Features of spring data JPA
+----------------------------------------
+repository.save()
+repository.findById()
+repository.findAll()
+repository.remove(Object)
+repository.count()
+
+Custom Methods
+--------------------
+List<Course> findByAuthor(String author)
+
+
+------------------------------------------------------------
+    ***         Hibernate V/S JPA
+------------------------------------------------------------------
+
+- JPA defines the specification. It is an API.
+    - How do you defines entities?
+    - How do you map attributes?
+    - Who manages the entities?
+
+- Hibernate is the one most popular implementation of JPA
+- Using Hibernate directly would result in a lock in to Hibernate.
+    - Other JPA implementation of JPA(Toplink)
