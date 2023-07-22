@@ -1,6 +1,11 @@
 package com.mahesshittlani.learnhibernateandjpa.course;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity(name = "courses")
 public class Course {
+	@Id
 	private int id;
 	private String title;
 	private String author;
