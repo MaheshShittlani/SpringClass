@@ -305,3 +305,81 @@ List<Course> findByAuthor(String author)
 - Hibernate is the one most popular implementation of JPA
 - Using Hibernate directly would result in a lock in to Hibernate.
     - Other JPA implementation of JPA(Toplink)
+
+
+--------------------------------------------------------------------
+
+Spring Boot REST API
+------------------------------
+1. Create a simple Hello World API
+2. Create a simple Hello World Bean API
+3. What's happing in background
+---------------------------------
+	1. How our request are handled?
+	A) DispatcherServlet - Front controller pattern
+		Mapping Servlets:  dispather servlet url (/)
+		Autoconfiguration
+	2. How HelloWorldBean object is converted to JSON.
+	A) @ResponseBody + JacksonHttpMessageConvertor
+		Autoconfiguration
+	3. Who is Configuring Error mapping
+	A) Autoconfiguration (ErrorMVCAutoConfiguration)
+	
+4. Enhance API with the use of path variable
+	1. what is path variable
+	2. How to use it
+	3. @PathVariable annotation for mapping path variable
+
+Creating a Rest API
+--------------------------
+Identify the key Resources
+	Example:
+		Users
+		POST
+Identify the actions
+-------------------------
+	Retrieve
+	Delete
+	Update
+------------------------------
+Explain the HTTP Methods
+------------------------------
+GET
+POST
+PUT
+PATCH
+DELETE
+
+Create the route list
+----------------------
+	/users
+	/users/1
+
+
+Create a User Entity
+Create a UserDaoService
+
+----------------------------------
+Handling Resonse Status code
+--------------------------------
+Success - 200
+Created - 201
+No Content - 204
+Not Found - 404
+Validation Error - 400
+Server Exception - 500
+
+----------------------------------
+
+URI location = ServletUriComponentBuilder.fromCurrentRequest().path("/{id}").buildAndExpend(savedUser.getId()).toUri();
+ResponseEntity.created(location).build();
+
+Implementing Exception Handling
+-------------------------------------
+
+if(user == null){
+	throw new UserNotFoundException("Not found");
+}
+
+@ResponseStatus(code = HttpStatus.NOT_FOUND)
+class UserNotFoundException extends RuntimeException {
